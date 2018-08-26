@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" href="css/trello.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> </head>
+
+<body ng-cloak>
+    <header>
+        <div class="header">
+            <h1 class="header__toDo">ToDo App</h1>
+        </div>
+    </header>
+
+    <section class="container" ng-controller="listsCtrl as listsCtrl">
+        <section class="createList">
+            <form ng-submit="listsCtrl.addList()">
+                Create list: <input type="text" class="form-control" ng-model='listsCtrl.listName'><br>
+                <button type="submit" class="btn btn-primary">Confirm</button>
+            </form>
+        </section>
+        <div class="row contentBlock">
+            <section class="contentBlock__list" ng-repeat="list in listsCtrl.lists" ng-controller="listCtrl as listCtrl">
+                <button type="button" class="close" aria-label="Close" ng-click="listCtrl.removeList(list)"> <span aria-hidden="true">&times;</span> </button>
+                <h1 class="contentBlock__listName">{{list.listName}}</h1>
+                <button type="submit" class="btn btn-primary btn-sm btn-block" ng-click="toggleAdd=!toggleAdd">{{toggleAdd ? 'Hide' : 'Add card'}}</button>
+                <br>
+                <form class="newCard" ng-show="toggleAdd" ng-submit="listCtrl.createCard(list)">
+                    <input type='text' class="form-control" ng-model='listCtrl.cardDescription' placeholder='New card'>
+                    <br>
+                    <button type="submit" class="btn btn-success" ng-click="toggleAdd=!toggleAdd">Confirm</button>
+                </form>
+                <br>
+                <div class="contentBlock__card" ng-repeat='card in listCtrl.getCards(list)'>
+                    <button type="button" class="close" aria-label="Close" ng-click="listCtrl.removeCard(card)"> <span aria-hidden="true">&times;</span> </button> {{card.description}}
+                    <br>
+                    <button type="submit" class="btn btn-success btnHideCard" ng-click="toggle=!toggle">{{toggle ? 'HIDE' : 'Move card'}}</button>
+                    <button type="button" class="btn btn-primary btn-sm btn-block" ng-show="toggle" ng-repeat="list in listsCtrl.lists" ng-click="listCtrl.toList(card, list.id)">{{list.listName}}</button>
+                    <button type="submit" class="btn btn-danger btnEdit" ng-click="toggleEdit=!toggleEdit">{{toggleEdit ? 'HIDE' : 'Edit'}}</button>
+                    <form ng-show="toggleEdit" ng-submit="listCtrl.editCard(card)">
+                        <input type="text" class="form-control inpEdit" ng-model='listCtrl.edit'>
+                        <button type="submit" class="btn btn-primary" ng-click="toggleEdit=!toggleEdit">Confirm</button>
+                    </form>
+                </div>
+
+            </section>
+        </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/factories/listFactory.js"></script>
+    <script src="js/factories/cardFactory.js"></script>
+    <script src="js/controllers/listsCtrl.js"></script>
+    <script src="js/controllers/listCtrl.js"></script>
+</body>
+<script>
+</script>
+
+</html>
